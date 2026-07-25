@@ -26,9 +26,11 @@ builder.Services.AddRateLimiter(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.MapControllers();
 app.UseRateLimiter();
-app.MapGet("/", () => Results.Content("PatchHarbor is running. Use /api/reports to submit or triage vulnerability disclosures.", "text/plain"));
 app.MapGet("/health", () => Results.Ok(new { status = "ok", service = "patchharbor" }));
+app.MapFallbackToFile("index.html");
 
 app.Run();
