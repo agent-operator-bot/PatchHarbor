@@ -1,0 +1,13 @@
+services:
+  patchharbor:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      PATCHHARBOR_ADMIN_KEY: ${PATCHHARBOR_ADMIN_KEY:?Set PATCHHARBOR_ADMIN_KEY before starting PatchHarbor}
+    volumes:
+      - patchharbor-data:/app/PatchHarbor.Web/data
+    restart: unless-stopped
+
+volumes:
+  patchharbor-data:
