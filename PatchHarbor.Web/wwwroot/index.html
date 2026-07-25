@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PatchHarbor</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#17251f;background:#f4f7f3}body{max-width:960px;margin:0 auto;padding:32px 20px}header{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;border-bottom:1px solid #dce6dc;padding-bottom:24px}h1,h2{letter-spacing:-.04em}h1{margin:0}.eyebrow{color:#167653;font-size:.75rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.panel{background:white;border:1px solid #dce6dc;border-radius:14px;padding:22px;margin-top:24px;box-shadow:0 10px 30px #2340260b}label{display:block;font-weight:700;font-size:.9rem;margin:14px 0 6px}input,textarea,select{width:100%;box-sizing:border-box;border:1px solid #c9d8cb;border-radius:8px;padding:11px;font:inherit}textarea{min-height:120px}button{margin-top:16px;background:#167653;color:white;border:0;border-radius:8px;padding:11px 16px;font-weight:800;cursor:pointer}.notice{padding:10px;border-radius:8px;background:#e3f2e7;color:#145e43;margin-top:12px}.advisory{border-top:1px solid #e1e9e1;padding:14px 0}.advisory:first-child{border-top:0}.meta{color:#68776e;font-size:.85rem}footer{color:#68776e;font-size:.8rem;margin-top:28px}
+  </style>
+</head>
+<body>
+  <header><div><p class="eyebrow">PatchHarbor</p><h1 id="community-name">Loading communityâ€¦</h1><p id="community-description">Self-hosted vulnerability disclosure for game-server communities.</p></div><span class="meta">Private by default</span></header>
+  <main>
+    <section class="panel"><h2>Report a security issue</h2><p>Only report systems and communities you are authorized to assess. Do not include passwords or live exploit payloads.</p><form id="report-form"><label for="title">Title</label><input id="title" required maxlength="160"><label for="serverName">Server or community</label><input id="serverName" required maxlength="160"><label for="severity">Severity</label><select id="severity"><option>Informational</option><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select><label for="component">Affected component</label><input id="component" maxlength="160"><label for="description">Description</label><textarea id="description" required maxlength="20000"></textarea><label for="contact">Contact (optional)</label><input id="contact" type="email" maxlength="320"><button type="submit">Submit private report</button></form><div id="result" class="notice" hidden></div></section>
+    <section class="panel"><h2>Public advisories</h2><div id="advisories"><p class="meta">Loadingâ€¦</p></div></section>
+  </main>
+  <footer>PatchHarbor keeps disclosure private until a community administrator deliberately publishes a redacted advisory.</footer>
+  <script>
+    const el = id => document.getElementById(id);
+    async function loadCommunity(){const r=await fetch('/api/community');if(!r.ok)return;const c=await r.json();el('community-name').textContent=c.name;el('community-description').textContent=c.description}
+    async function loadAdvisories(){const box=el('advisories');const r=await fetch('/api/advisories');if(!r.ok){box.innerHTML='<p class="meta">No public advisories are enabled.</p>';return}const items=await r.json();box.innerHTML=items.length?items.map(a=>`<article class="advisory"><strong>${escapeHtml(a.title)}</strong><div class="meta">${escapeHtml(a.serverName)} Â· ${escapeHtml(a.severity)}${a.affectedComponent?' Â· '+escapeHtml(a.affectedComponent):''}</div></article>`).join(''):'<p class="meta">No public advisories.</p>'}
+    function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+    el('report-form').addEventListener('submit',async event=>{event.preventDefault();const body={title:el('title').value,serverName:el('serverName').value,severity:el('severity').value,affectedComponent:el('component').value,description:el('description').value,reporterContact:el('contact').value};const r=await fetch('/api/reports',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const result=el('result');result.hidden=false;result.textContent=r.ok?'Your report was received. Keep this page open if you need the receipt.':'The report could not be submitted. Please try again later.';if(r.ok)event.target.reset()});
+    loadCommunity();loadAdvisories();
+  </script>
+</body>
+</html>
