@@ -42,3 +42,5 @@ The target is a genuinely usable early alpha for small game-server communitiesâ
 ## Alpha exit criteria
 
 PatchHarbor is ready for early-alpha users when a community can deploy it from documented instructions, submit and triage reports safely, control who can view private reports, publish a redacted advisory, back up its data, and upgrade without losing reports.
+
+See [ALPHA-ACCEPTANCE.md](ALPHA-ACCEPTANCE.md) and [THREAT-MODEL.md](THREAT-MODEL.md) for the current release gates and known limitations.
