@@ -82,3 +82,12 @@ Invoke-RestMethod -Headers @{"X-Admin-Key"=$env:PATCHHARBOR_ADMIN_KEY} http://lo
 PatchHarbor is a disclosure workflow, not an exploit-hosting system. Communities should define their own authorization, retention, moderation, and coordinated-disclosure policies before production use. Replace the development admin-key approach with proper identity and role management before exposing the service to the internet.
 
 Back up the `PatchHarbor.Web/data` directory. It contains community settings, reports, and audit history in the current alpha storage model.
+
+Verify a backup and restore cycle with:
+
+```powershell
+New-Item -ItemType Directory -Force .\PatchHarbor.Web\data
+Set-Content .\PatchHarbor.Web\data\backup-check.json '{"check":"synthetic"}'
+powershell -ExecutionPolicy Bypass -File .\scripts\verify-backup-restore.ps1
+Remove-Item .\PatchHarbor.Web\data\backup-check.json -Force
+```
