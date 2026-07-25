@@ -1,0 +1,26 @@
+@PatchHarbor_Host = http://localhost:5000
+
+GET {{PatchHarbor_Host}}/health
+Accept: application/json
+
+### Submit a disclosure
+
+POST {{PatchHarbor_Host}}/api/reports
+Content-Type: application/json
+
+{
+  "title": "Example issue",
+  "description": "Explain the impact without including secrets.",
+  "serverName": "Example Community",
+  "severity": "High",
+  "affectedComponent": "Moderation plugin",
+  "affectedVersion": "1.0.0",
+  "reproductionSteps": "Use a private channel for sensitive reproduction details.",
+  "reporterContact": "security@example.org"
+}
+
+### List reports as a moderator
+
+GET {{PatchHarbor_Host}}/api/reports
+X-Admin-Key: {{$dotenv PATCHHARBOR_MODERATOR_KEY}}
+Accept: application/json
