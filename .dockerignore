@@ -1,0 +1,5 @@
+**/bin/
+**/obj/
+.nuget-profile/
+*.log
+PatchHarbor.Web/data/reports.json
