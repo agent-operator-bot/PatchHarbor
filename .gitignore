@@ -1,0 +1,7 @@
+.nuget-profile/
+PatchHarbor.Web/bin/
+PatchHarbor.Web/obj/
+PatchHarbor.Web/data/reports.json
+PatchHarbor.Web/data/audit.json
+PatchHarbor.Web/data/community.json
+*.log
