@@ -1,0 +1,6 @@
+bin/
+obj/
+data/reports.json
+data/audit.json
+data/community.json
+*.log
